@@ -1,20 +1,20 @@
 #Test comment Paul
 # Définir le système d'équations différentielles
-
-
+y0_PCV = (1.0, 7.13, 41.2, 0.0)
+parameters_PCV = (0.121, 0.0295, 0.0031, 0.00867, 0.729, 0.729, 0.24, 100)
 
 def derivees(y:tuple, parameters:tuple[float]):
     """ Calcul des dérivées partielles. 
     y : (C, P, Q, Qp)
     C : Concentration sanguine de l'agent
     P : population en prolifération
-    Q : popualtion en quiescence
+    Q : population en quiescence
     Qp : population en quiescence
     Pstar population totale
 
     """
     C, P, Q, Qp = y
-    KDE, lambda_p, K, k_Qp_P, k_P_Q, gamma_P, gamma_Q = parameters
+    lambda_p, k_P_Q, k_Qp_P, delta_Qp, gamma_P, gamma_Q, KDE, K = parameters
 
     Pstar = P + Q + Qp
     dC = - KDE * C 
@@ -24,6 +24,11 @@ def derivees(y:tuple, parameters:tuple[float]):
         - gamma_P * C* KDE * P # Mort de cellules
         )
     dQ = k_P_Q*P - gamma_Q*C*KDE*Q
-    dQp = gamma_Q*C*KDE*Q
+    dQp = gamma_Q*C*KDE*Q - k_Qp_P*Qp - delta_Qp*Qp
 
     return dC, dP, dQ, dQp
+
+if __name__=="__main__":
+
+    dy = derivees(y0_PCV, parameters_PCV)
+    print(dy)
