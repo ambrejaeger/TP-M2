@@ -1,11 +1,11 @@
 
 import numpy as np
 from scipy.integrate import odeint
+import matplotlib.pyplot as plt
 
 #Test comment Paul
 # Définir le système d'équations différentielles
-y0_PCV = (1.0, 7.13, 41.2, 0.0)
-parameters_PCV = (0.121, 0.0295, 0.0031, 0.00867, 0.729, 0.729, 0.24, 100)
+
 
 def derivees(y:tuple, t, parameters:tuple[float]):
     """ Calcul des dérivées du système. 
@@ -32,24 +32,40 @@ def derivees(y:tuple, t, parameters:tuple[float]):
 
     return dC, dP, dQ, dQp
 
-if __name__=="__main__":
+#if __name__=="__main__":
 
-    dy = derivees(y0_PCV,0, parameters_PCV)
-    print(dy)
+#    dy = derivees(y0_PCV,0, parameters_PCV)
+#    print(dy)
 
-
+y0_PCV = (1.0, 7.13, 41.2, 0.0) #Initial conditions
+parameters_PCV = (0.121, 0.0295, 0.0031, 0.00867, 0.729, 0.729, 0.24, 100) #Parameters lambda_p, k_P_Q, k_Qp_P, delta_Qp, gamma_P, gamma_Q, KDE, K
 
 # Time points to solve for
-t = np.linspace(0, 22, 100)
+t = np.linspace(0, 150, 100)
 
 # Solve the system of equations
 y = odeint(derivees, y0_PCV, t, args=(parameters_PCV,))
 
 # Plot the results
-import matplotlib.pyplot as plt
-plt.plot(t, y[:, 0], label='C')
-plt.plot(t, y[:, 1], label='P')
-plt.plot(t, y[:, 2], label='Q')
-plt.plot(t, y[:, 3], label='Qp')
-plt.legend()
-plt.show()
+
+#plt.plot(t, y[:, 0], label='C')
+#plt.plot(t, y[:, 1], label='P')
+#plt.plot(t, y[:, 2], label='Q')
+#plt.plot(t, y[:, 3], label='Qp')
+#plt.legend()
+#plt.show()
+
+def plot_MTD(derivees, y0, parameters, t):
+    y = odeint(derivees, y0, t, args=(parameters,))
+    plt.plot(t, y[:, 1] + y[:, 2] + y[:, 3], label='MTD')
+    plt.xlabel('Time (months)')
+    plt.ylabel('MTD (mm)')
+    plt.legend()
+    plt.show()
+
+plot_MTD(derivees, y0_PCV, parameters_PCV, np.linspace(0, 100, 1000))
+
+#Testing different initial conditions
+
+#P0 in [5.35; 8.917]
+#Q0 in [38.316; 44.084]
