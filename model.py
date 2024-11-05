@@ -2,7 +2,6 @@
 import numpy as np
 from scipy.integrate import odeint
 
-#Test comment Paul
 # Définir le système d'équations différentielles
 y0_PCV = (1.0, 7.13, 41.2, 0.0)
 parameters_PCV = (0.121, 0.0295, 0.0031, 0.00867, 0.729, 0.729, 0.24, 100)
@@ -32,24 +31,33 @@ def derivees(y:tuple, t, parameters:tuple[float]):
 
     return dC, dP, dQ, dQp
 
+# Plot the results
+import matplotlib.pyplot as plt
+def plot_simulation(t, y):
+    Pstar = y[:, 1] + y[:, 2] + y[:, 3]
+
+    fig, ax1 = plt.subplots()
+    ax1.set_xlabel("time (mo)")
+    ax2 = ax1.twinx()
+    ax1.set_ylabel("Tumor size (mm)")
+    ax2.set_ylabel("Drug concentration (AU)")
+
+    ax2.plot(t, y[:, 0], "k--", label='C')
+    ax1.plot(t, Pstar, label='Total tumor size')
+    ax1.plot(t, y[:, 1], label='Proliferative part')
+    ax1.plot(t, y[:, 2], label='Dormant part')
+    ax1.plot(t, y[:, 3], label='Dammaged dormant part')
+    fig.legend()
+    return fig
+
 if __name__=="__main__":
 
     dy = derivees(y0_PCV,0, parameters_PCV)
-    print(dy)
 
+    # Time points to solve for
+    t = np.linspace(0, 22, 100)
 
-
-# Time points to solve for
-t = np.linspace(0, 22, 100)
-
-# Solve the system of equations
-y = odeint(derivees, y0_PCV, t, args=(parameters_PCV,))
-
-# Plot the results
-import matplotlib.pyplot as plt
-plt.plot(t, y[:, 0], label='C')
-plt.plot(t, y[:, 1], label='P')
-plt.plot(t, y[:, 2], label='Q')
-plt.plot(t, y[:, 3], label='Qp')
-plt.legend()
-plt.show()
+    # Solve the system of equations
+    y = odeint(derivees, y0_PCV, t, args=(parameters_PCV,))
+    fig = plot_simulation(t, y)
+    plt.show()
