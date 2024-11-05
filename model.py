@@ -3,7 +3,6 @@ import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 
-#Test comment Paul
 # Définir le système d'équations différentielles
 
 
