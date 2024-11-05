@@ -62,7 +62,8 @@ def plot_MTD(derivees, y0, parameters, t):
     plt.legend()
     plt.show()
 
-plot_MTD(derivees, y0_PCV, parameters_PCV, np.linspace(0, 100, 1000))
+if __name__ == "__main__" : #pour pas que ce code s'execute lors de l'import dans l'autre fichier
+    plot_MTD(derivees, y0_PCV, parameters_PCV, np.linspace(0, 100, 1000))
 
 #Testing different initial conditions
 
