@@ -31,28 +31,36 @@ def derivees(y:tuple, t, parameters:tuple[float]):
 
     return dC, dP, dQ, dQp
 
-#if __name__=="__main__":
+def growth_no_treatment(y:tuple, t, parameters:tuple[float]):
+    """ Calcul des dérivées du système. 
+    y : (P, Q)
+    C : Concentration sanguine de l'agent
+    P : population en prolifération
+    Q : population en quiescence
+    Qp : population en quiescence
+    Pstar population totale
 
-#    dy = derivees(y0_PCV,0, parameters_PCV)
-#    print(dy)
+    """
+    C, P, Q, Qp = y
+    lambda_p, k_P_Q, K = parameters
 
-y0_PCV = (1.0, 7.13, 41.2, 0.0) #Initial conditions
-parameters_PCV = (0.121, 0.0295, 0.0031, 0.00867, 0.729, 0.729, 0.24, 100) #Parameters lambda_p, k_P_Q, k_Qp_P, delta_Qp, gamma_P, gamma_Q, KDE, K
+    Pstar = P + Q
+    dC  = 0
+    dP = - (lambda_p * P * (1-Pstar/K) #prolifération
+        + k_P_Q*P   # Induction de dormance
+        )
+    dQ = - k_P_Q*P
+    dQp = 0
+
+    return dC, dP, dQ, dQp
+ 
 
 # Time points to solve for
-t = np.linspace(0, 150, 100)
+#t = np.linspace(0, 150, 100)
 
 # Solve the system of equations
-y = odeint(derivees, y0_PCV, t, args=(parameters_PCV,))
+#y = odeint(derivees, y0_PCV, t, args=(parameters_PCV,))
 
-# Plot the results
-
-#plt.plot(t, y[:, 0], label='C')
-#plt.plot(t, y[:, 1], label='P')
-#plt.plot(t, y[:, 2], label='Q')
-#plt.plot(t, y[:, 3], label='Qp')
-#plt.legend()
-#plt.show()
 
 def plot_MTD(derivees, y0, parameters, t):
     y = odeint(derivees, y0, t, args=(parameters,))
@@ -61,10 +69,9 @@ def plot_MTD(derivees, y0, parameters, t):
     plt.ylabel('MTD (mm)')
     plt.legend()
     plt.show()
+    return y
 
-plot_MTD(derivees, y0_PCV, parameters_PCV, np.linspace(0, 100, 1000))
 
-#Testing different initial conditions
 
-#P0 in [5.35; 8.917]
-#Q0 in [38.316; 44.084]
+
+
