@@ -73,5 +73,30 @@ def plot_MTD(derivees, y0, parameters, t):
 
 
 
+def plot_3D_phase_portrait(C_val, param):
+    Qp = np.linspace(0, 20, 10)
+    P = np.linspace(0, 20, 10)
+    Q = np.linspace(20, 60, 10)
+    P, Q, Qp = np.meshgrid(P, Q, Qp)
+
+    
+    # Evaluate the derivatives function on the grid
+    dC, dP, dQ, dQp = derivees((C_val, P, Q, Qp), 0, param)
+
+    # Create a 3D plot
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+        
+    # Plot the phase portrait on the respective subplot
+    ax.quiver(P.ravel(), Q.ravel(), Qp.ravel(), dP.ravel(), dQ.ravel(), dQp.ravel(), color='b')
+    
+    ax.set_xlabel('P')
+    ax.set_ylabel('Q')
+    ax.set_zlabel('Qp')
+    ax.set_title('Phase Portrait of Derivatives Function')
+
+    plt.show()
+
+
 
 
