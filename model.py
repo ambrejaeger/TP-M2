@@ -73,5 +73,6 @@ def plot_MTD(derivees, y0, parameters, t):
 
 
 
+plot_MTD(derivees, y0_PCV, parameters_PCV, np.linspace(0, 100, 1000))
 
 
