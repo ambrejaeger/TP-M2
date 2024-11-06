@@ -71,5 +71,12 @@ def plot_MTD(derivees, y0, parameters, t):
     plt.show()
     return y
 
+<<<<<<< HEAD
 y0_PCV = (1.0, 7.13, 41.2, 0.0) #Initial conditions
 parameters_PCV = (0.121, 0.0295, 0.0031, 0.00867, 0.729, 0.729, 0.24, 100) #Parameters lambda_p, k_P_Q, k_Qp_P, delta_Qp, gamma_P, gamma_Q, KDE, K
+=======
+
+
+
+
+>>>>>>> 681a961ae7ea07080d7ea1d20f4a0758ffac2559
