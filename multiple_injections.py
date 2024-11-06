@@ -1,6 +1,7 @@
 from model import *
 
-def run_simulation(P:float, Q:float, Qp:float, injections:list[tuple[float]], t_stop, parameters=parameters_PCV, step=0.2):
+
+def run_simulation(P:float, Q:float, Qp:float, injections:list[tuple[float]], t_stop, parameters=parameters, step=0.2):
     """
     Takes initial parameters of the model of the tumor (P, Q and Qp), then list of injections
     List of injections to be formated as a tuple of floats: 
