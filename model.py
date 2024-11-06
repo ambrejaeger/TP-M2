@@ -2,10 +2,11 @@
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
+import copy
 
 # Définir le système d'équations différentielles
 y0_PCV = (1.0, 7.13, 41.2, 0.0) #Initial conditions
-parameters = {
+parameters_PCV = {
     "lambda_p":0.121,
     "k_P_Q":0.0295,
     "k_Qp_P":0.0031, 
@@ -14,6 +15,9 @@ parameters = {
     "KDE":0.24, 
     "K":100
     }
+parameters = copy.deepcopy(parameters_PCV)
+
+
 
 
 def derivees(y:tuple, t, parameters:dict):
@@ -96,7 +100,7 @@ def plot_3D_phase_portrait(C_val, param):
     ax = fig.add_subplot(111, projection='3d')
         
     # Plot the phase portrait on the respective subplot
-    ax.quiver(P.ravel(), Q.ravel(), Qp.ravel(), dP.ravel(), dQ.ravel(), dQp.ravel(), color='b')
+    ax.quiver(P.ravel(), Q.ravel(), Qp.ravel(), dP.ravel(), dQ.ravel(), dQp.ravel(), color='b', length = 0.2)
     
     ax.set_xlabel('P')
     ax.set_ylabel('Q')
