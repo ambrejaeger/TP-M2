@@ -15,7 +15,7 @@ def run_simulation(P:float, Q:float, Qp:float, injections:list[tuple[float]], t_
     #copying the list and adding the stop condition
     #copying is required to prevent the list being modified in whatever function created it
     #None will be recognised as a signal to exit the loop
-    events.sort()
+    events.sort(key=lambda event: event[0])
 
     old_t=0
     C = 0
@@ -26,7 +26,8 @@ def run_simulation(P:float, Q:float, Qp:float, injections:list[tuple[float]], t_
     for new_t, delta_C in events:
         if new_t > old_t: #there is a time-span that needs to be simulated
             y = C, P, Q, Qp
-            Tstep = np.concatenate((np.arange(old_t, new_t, step), np.array([new_t])))
+            n_points = int((new_t - old_t)/step) + 2
+            Tstep = np.linspace(old_t, new_t, n_points, np.array([new_t]))
             #arange ne comprends pas la valeur de temps finale, on doit donc l'ajouter manuellement afin qu'il soit compris
             Ystep = odeint(derivees, y, Tstep, args=(parameters,))
             C, P, Q, Qp = Ystep[-1] #mise à jour des populations
@@ -60,7 +61,7 @@ def plot_simulation(t, y): #je l'ai remise, au moins pour voir ce que donne une 
     return fig
 
 if __name__ == "__main__":
-    injections = [(10, 1), (13, 1)]
+    injections = [(10, 1), (13, 1), (16, 1), (19, 1), (21,1)]
     _, P0, Q0, Qp0 = y0_PCV
     T, Y = run_simulation(P0, Q0, Qp0, injections, 100)
     fig = plot_simulation(T, Y)
