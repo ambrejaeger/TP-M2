@@ -1,5 +1,5 @@
 from model import *
-
+from scipy import integrate
 
 def run_simulation(P:float, Q:float, Qp:float, injections:list[tuple[float]], t_stop, parameters=parameters, step=0.2):
     """
@@ -12,7 +12,7 @@ def run_simulation(P:float, Q:float, Qp:float, injections:list[tuple[float]], t_
 
     Injection that happen after t_stop will be disregarded as if they never happened
     """
-    events = injections.copy() + [(t_stop, None)] 
+    events = injections.copy() + [(t_stop, 0)] 
     #copying the list and adding the stop condition
     #copying is required to prevent the list being modified in whatever function created it
     #None will be recognised as a signal to exit the loop
@@ -25,24 +25,29 @@ def run_simulation(P:float, Q:float, Qp:float, injections:list[tuple[float]], t_
     T = np.array([0.0])
 
     for new_t, delta_C in events:
-        if new_t > old_t: #there is a time-span that needs to be simulated
+        if new_t > old_t and old_t < t_stop: #there is a time-span that needs to be simulated
             y = C, P, Q, Qp
             n_points = int((new_t - old_t)/step) + 2
             Tstep = np.linspace(old_t, new_t, n_points, np.array([new_t]))
             #arange ne comprends pas la valeur de temps finale, on doit donc l'ajouter manuellement afin qu'il soit compris
-            Ystep = odeint(derivees, y, Tstep, args=(parameters,))
+            try:
+                Ystep, dict = odeint(derivees, y, Tstep, args=(parameters,), full_output=1)
+            except integrate.ODEintWarning:
+                raise ValueError(dict)
             C, P, Q, Qp = Ystep[-1] #mise à jour des populations
             
             #on ajoute les valeurs qui viennent d'être calculées à nos variables d'export
             T = np.concatenate((T, Tstep))
             Y = np.concatenate((Y, Ystep), axis=0)
             old_t = new_t
-
-        if delta_C is None: #we have reached t_stop
-            return T, Y
+        C += delta_C  
+    
+    T = np.concatenate((T, np.array([t_stop])))
+    Y = np.concatenate((Y, np.array([[C, P, Q, Qp]])), axis=0)
+    return T, Y
         
 
-        C += delta_C      
+            
 
 def plot_simulation(t, y): #je l'ai remise, au moins pour voir ce que donne une simulation avec injections multiples
     Pstar = y[:, 1] + y[:, 2] + y[:, 3]
@@ -62,8 +67,8 @@ def plot_simulation(t, y): #je l'ai remise, au moins pour voir ce que donne une 
     return fig
 
 if __name__ == "__main__":
-    injections = [(10, 1), (13, 1), (16, 1), (19, 1), (21,1)]
+    injections = [(15, 1), (45,1)]
     _, P0, Q0, Qp0 = y0_PCV
-    T, Y = run_simulation(P0, Q0, Qp0, injections, 100)
+    T, Y = run_simulation(P0, Q0, Qp0, injections, 120)
     fig = plot_simulation(T, Y)
     plt.show()
