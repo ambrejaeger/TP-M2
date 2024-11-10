@@ -18,6 +18,7 @@
 \usepackage{layout}
 
 \usepackage[style=abnt]{biblatex}
+\usepackage{acronym}
 
 % indica o arquivo com as referencis bibliograficas
 \addbibresource{}
@@ -57,9 +58,19 @@ pdfstartview={FitV},
 
 \begin{document}
 \maketitle % Não remova essa linha!
-     
+
+\section{Liste des abréviations}
+\begin{acronym}
+\acro{DT}{diamètre de la tumeur}
+\acro{DTM}{diamètre de la tumeur moyen}
+\acro{GBG}{gliome de bas grade}
+\acroplural{GBG}[GBGs]{gliomes de bas grade}%
+\acro{MI}{moment d'injection}
+\acroplural{MI}[MIs]{moments d'injection}
+\end{acronym}
+
 \section{Introduction}
-Que sont les gliomes de bas-grades leurs propriétés ?\\
+Que sont les \acp{GBG}, leurs propriétés ?\\
 Quels sont les traitements existants?\\
 Question scientifiques: \textbf{Quels sont les temps et fréquences optimales d'administration du traitement pour maximiser leur efficacité ?}
 
@@ -91,6 +102,7 @@ Question scientifiques: \textbf{Quels sont les temps et fréquences optimales d'
 \end{figure}
 
 \subsubsection{Explication du modèle}
+Les équation différentielles sont résolues numériquement entre chaque évenement (début de simulation, injections, et fin de simulation) séquentiellement. Après chaque interval, la concentration d'agent chimique peut être ajustée, et le système ainsi modifié sert de point de départ pour l'interval suivant. Les temps pour lesquels les valeurs sont calculées sont répartis uniformément dans chaque interval, avec temps de debut et de fin inclus, mais ne le sont pas forcément entre chaque interval. Ceci a des impact pour la contruction de la fonction de calcul de score que nous expliquerons dans la section dédiée.
 \subsubsection{Paramétrisation}
 Dans l'article de référence, des données de patients ayant été traité par différentes thérapies: Chimiothérapies PCV, Chimiothérapies TMZ et radiothérapies; ont été utilisées pour paramétriser le modèle. Pour chacune de ces cohortes ils ont estimé des paramètres moyens et quantifier la variabilité interindividuelle par le coefficient de variation (CV) \ref{fig:tableau}.  On constate que pour les différents traitements, le DT évolue différemment \ref{fig:evol_moy}. $\lambda_{p}$ (coefficient de croissance du tissu), $P_{0}$ (tissu prolifératif à l'instant 0) et $Q_{0}$ (tissu quiescent à l'instant 0) sont des paramètres associés à la tumeur.  Ces paramètres peuvent être estimées sur les patients avant le début du traitement. On estime souvent P égal à 10\% du DT et on peut mesurer $\lambda_{p}$ sur la croissance de la tumeur pendant le pré-traitement. Une estimation individuelle du modèle permet de prédire avec plus de précision l'évolution du DT de la tumeur avec le modèle. En effet, ces paramètres notamment $\lambda_{p}$ varient beaucoup entre individus\ref{fig:tableau}. Or, comme on le constate des faibles variations de ces paramètres sont suffisantes pour modifier significativement  l'évolution du DT \ref{fig:rand_traj}. On fait varier le $DT_{0}$ entre 30 et 85mm et on définit $P_{0}$ comme 10\% (proportion observée cliniquement) du DT et on fait varier $\lambda_{p}$ selon sa distribution donnée pour le traitement PCV \ref{fig:tableau}. On choisit également les autres paramètres comme paramètres moyens de PCV. On observe des trajectoires différentes.  On  souhaite comprendre le rôle de ces différents paramètres sur l'évolution du DT. De même, les caractéristiques du traitement, $\gamma$, $C$ vont probablement influer sur l'évolution de la tumeur. On va donc explorer l'espace des paramètres pour évaluer l'influence de ces différents paramètres.  
 \begin{figure}
@@ -141,6 +153,7 @@ Il semble donc essentielle d'estimer les paramètres individuelles des tumeurs e
 Pour l'instant, on a considéré que les traitements sont injectés en une seule fois à t=0.  Mais est-ce qu'injecter la même dose de traitement en plusieurs fois ou à des proportions différentes de $P_{0}$, $Q_{0}$ pourrait diminuer le DT sans accroître excessivement la toxicité ? 
 \section{Optimisation du moment et de la fréquence d'injection}
 On cherche à établir le meilleur moment pour injecter une dose de traitement. Pour ce faire, on choisit un score S à minimiser. Ce score est l'intégrale du diamètre de la tumeur sur la durée de la simulation. L'objectif du traitement est de réduire la taille de la tumeur sur un temps long et non seulement de considérer le DT à un t doné car alors, les injections seraient faites au temps peu avant t. Le score choisit ainsi de la durée de la simulation 
+Comme expliqué précédement, les points de temps pour lesquels les différentes populations sont estimées ne sont pas répartis uniformément sur la durée de la simulation, et certains sont répétés. En effet, les valeurs de fin d'un interval (avant injection) et de debut de l'interval suivant (après injection) sont tous les deux dans les données, au même temps. Ainsi, afin de limiter l'opportunité de la fonction d'optimisation d'exploiter le systeme de sampling, par exemple en choisisant des temps d'injections permettant de surreprésenter la période de temps pendant laquelle la tumeur est petite pour diminuer artificiellement le score, nous utilisons une intégration par méthode des trapèzes au lieu de prendre la moyenne des tailles. Cela n'élimine cependant pas la sous-estimation sur les parties convexes du \ac{DT}.
 
 \subsection{Optimisation pour une unique injection}
 On cherche d'abord à déterminer si injecter le traitement à $ t > 0$  réduit S.  On observe le DT moyen pour des simulations de durée variable \ref{fig:duree_simu}. Si le temps de simulation est inférieure à 60 mois, pour les paramètres moyens des différents traitements, on voit qu'il est préférable de réaliser l'injection à t=0.  Pour les trois traiments à partir d'une certaine durée de simulation, le moment d'injection (MI) augmente linéairement en fonction de la durée de simulation. Mais on a considéré ici les paramètres moyens uniquement, or on a constaté précedemment que $\lambda_{p}$ avait un effet significatif sur l'évolution des tumeurs. On regarde donc si pour des simulations courtes (60 mois), des $\lambda_{p}$ différents il est également optimal de choisir $MI = 0$ \ref{fig:effet_lambda_moment}. On voit que pour PCV notamment, si la tumeur crôit plus vite que la moyenne, il est préférable de retarder l'injection. Mais il semble tout de même que $MI = 0$ est optimal.
@@ -163,6 +176,8 @@ On cherche d'abord à déterminer si injecter le traitement à $ t > 0$  réduit
 
     \caption{\textbf{(a).} DT moyen pour des simulations de durée entre 20 et 120 mois pour les paramètres moyens des différents traitements. \textbf{(b).} Effet de $\lambda_{p}$ sur le DT pour une durée de simulation de 60 mois.}
 \end{figure}
+
+\section{Optimisation pour des injections multiples}
 
 \section{Conclusion}
 Ce modèle peut s'avérer utile pour prédire l'évolution de la taille de la tumeur si les propriétés de la tumeur on pu être établies avant le traitement \cite{}. Il apparaît donc comme un potentiel outil de thérapie personalisée pour optimiser chez chaque patient le moment et les fréquences d'injection.  De plus, d'utres cancer tel que le cancer du sein ou du poumon, présentent des tissus P, Q et $Q_{p}$. Il serait intéressant de fitter ce modèle sur des données de patients pour tester sa validité. Mais le modèle tel qu'ici présenté a également de multiples limitations. 
