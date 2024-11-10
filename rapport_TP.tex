@@ -1,5 +1,5 @@
-\documentclass[12pt]{article}
-
+\documentclass[12pt,a4paper]{article}
+\setlength{\headheight}{15pt}
 
 \usepackage{graphicx, url}
 \usepackage[utf8x]{inputenc}
@@ -49,8 +49,8 @@ pdfstartview={FitV},
 
 \pagestyle{fancy}
 \fancyhf{}
-\rfoot{}
-\lhead{\textbf{\large TP Modélisation  - M2 2024}}
+\fancyfoot[C]{\thepage}
+\lhead{\textbf{\large TP Modélisation - M2 2024}}
 \rhead{\textbf{\large M. Collin, P. Henton, A. Jaeger}}
 
 
@@ -59,7 +59,8 @@ pdfstartview={FitV},
 \begin{document}
 \maketitle % Não remova essa linha!
 
-\section{Liste des abréviations}
+\section{Glossaire}
+\subsection{Liste des abréviations}
 \begin{acronym}
 \acro{DT}{diamètre de la tumeur}
 \acro{DTM}{diamètre de la tumeur moyen}
@@ -68,6 +69,8 @@ pdfstartview={FitV},
 \acro{MI}{moment d'injection}
 \acroplural{MI}[MIs]{moments d'injection}
 \end{acronym}
+\subsection{Liste des paramètres}
+
 
 \section{Introduction}
 Que sont les \acp{GBG}, leurs propriétés ?\\
@@ -187,7 +190,7 @@ Pour trouver les minima globaux, notre première méthode était de trouver une 
 Le premier problème était que la complexité de la première étape de cette méthode $O({N}^{n_{inj}})$ rendait cette méthode peu pratique pour des calculs à haute dimention ($n_{inj}\geq4$). Cependant, nous avions remarqué que les \acp{MI} optimaux proposés étaient proches d'injections régulières. Ainsi, nous avons choisi de déteminer le protocole optimal en deux étapes. Premièrement, nous cherchions un protocole avec des injections régulières, definit par un temps d'injection initial $T_{i}$ et un interval entre injections $\delta_{t}$ constant, par exploration grossière en grille, suivi d'une minimisation locale. Les \acp{MI} ainsi optenus servent de point de départ pour la recherche du protocol optimal sans contrainte d'un interval régulier.\\
 En comparant ces deux résultats, nous pouvons aussi évaluer le coût d'imposer des injections espacées d'un temps régulier.
 
-\subsubsection{Evolution de \acf{DTM} sur 120 mois en fonction du nombre d'injections}
+\subsubsection[Injections multiples 120 mois]{Evolution de \acf{DTM} sur 120 mois en fonction du nombre d'injections}
 \subsubsection{}
 
 \section{Conclusion}
