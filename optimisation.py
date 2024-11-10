@@ -33,6 +33,7 @@ def func_to_optimise_const(values:np.array, args):
     return score(T, Y, toxic)
 
 def find_optimal(n_inj, C_tot, P, Q, Qp, t_stop, Ns, toxic=False, const = False, parameters=parameters, step=0.2):
+    """Returns Temps_injection as an array of the time deltas, not the absolute times"""
     args = C_tot, P, Q, Qp, t_stop, parameters, step, toxic, n_inj
     if const:
         bounds = (0, t_stop), (0, t_stop/n_inj)
