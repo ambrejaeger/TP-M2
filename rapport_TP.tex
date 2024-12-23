@@ -20,12 +20,11 @@
 \usepackage[style=abnt]{biblatex}
 \usepackage{acronym}
 
-% indica o arquivo com as referencis bibliograficas
 \addbibresource{}
 
-\title{Optimisation du moment et de la fréquence d'injection de traitement pour les gliomes de bas grades chez l'adulte} % titulo
+\title{Optimisation du moment et de la fréquence d'injection de traitement pour les gliomes de bas grades chez l'adulte}
 
-\author{Maia COLLIN, Paul HENTON, Ambre JAEGER} % autor principal, orientador
+\author{Maia COLLIN, Paul HENTON, Ambre JAEGER} % All authors contributed equally
 
 \usepackage{fancyhdr}
 \usepackage{geometry}
@@ -57,7 +56,7 @@ pdfstartview={FitV},
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-\maketitle % Não remova essa linha!
+\maketitle
 
 \section{Glossaire}
 \subsection{Liste des abréviations}
@@ -186,8 +185,8 @@ On cherche d'abord à déterminer si injecter le traitement à $ t > 0$  réduit
 %Paul
 \subsubsection{Principes généraux}
 L'objectif est de savoir si en réalisant $n_{inj}$ injections, le \ac{DTM} peut être réduit. 
-Pour trouver les minima globaux, notre première méthode était de trouver une estimationn grossière en explorant de l'ensemble des valeurs des \acp{MI} possibles par une grille à $n_{inj}$ dimensions, avec $N=20$ points par dimensions, par \texttt{scipy.optimise.brute}. Cette estimation était ensuite  minimisée localement par \texttt{scipy.optimize.minimise} avec la methode L-BGCF-B\cite{}.\\
-Le premier problème était que la complexité de la première étape de cette méthode $O({N}^{n_{inj}})$ rendait cette méthode peu pratique pour des calculs à haute dimention ($n_{inj}\geq4$). Cependant, nous avions remarqué que les \acp{MI} optimaux proposés étaient proches d'injections régulières. Ainsi, nous avons choisi de déteminer le protocole optimal en deux étapes. Premièrement, nous cherchions un protocole avec des injections régulières, definit par un temps d'injection initial $T_{i}$ et un interval entre injections $\delta_{t}$ constant, par exploration grossière en grille, suivi d'une minimisation locale. Les \acp{MI} ainsi optenus servent de point de départ pour la recherche du protocol optimal sans contrainte d'un interval régulier.\\
+Pour trouver les minima globaux, notre première méthode était de trouver une estimation grossière en explorant de l'ensemble des valeurs des \acp{MI} possibles par une grille à $n_{inj}$ dimensions, avec $N=20$ points par dimensions, par \texttt{scipy.optimise.brute}. Cette estimation était ensuite  minimisée localement par \texttt{scipy.optimize.minimise} avec la methode L-BGCF-B\cite{}.\\
+Le premier problème était que la complexité de la première étape de cette méthode $O({N}^{n_{inj}})$ rendait cette méthode peu pratique pour des calculs à haute dimention ($n_{inj}\geq4$). Cependant, nous avions remarqué que la distribution des \acp{MI} optimaux proposée ressemblait à un espacement régulier des injections. Ainsi, nous avons choisi de déteminer le protocole optimal en deux étapes. Premièrement, nous cherchions un protocole avec un interval de temps régulier $\delta_{t}$ entre les injections, à partir temps de première injection $T_{i}$. Ces deux paramètres étaient trouvées par exploration grossière en grille, suivi d'une minimisation locale. Les \acp{MI} ainsi optenus servent de point de départ pour la recherche du protocol optimal sans contrainte d'un interval régulier.\\
 En comparant ces deux résultats, nous pouvons aussi évaluer le coût d'imposer des injections espacées d'un temps régulier.
 
 \subsubsection[Injections multiples 120 mois]{Evolution de \acf{DTM} sur 120 mois en fonction du nombre d'injections}
