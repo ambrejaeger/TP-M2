@@ -40,7 +40,7 @@ pdfstartview={FitV},
     colorlinks,%
     citecolor=blue,%
     filecolor=blue,%
-    linkcolor=red,%
+    linkcolor=blue,%
     urlcolor=blue
 }
 
@@ -57,20 +57,30 @@ pdfstartview={FitV},
 
 \begin{document}
 \maketitle
+\tableofcontents
 
 \section{Glossaire}
 \subsection{Liste des abréviations}
 \begin{acronym}
+%\acro{aconyme}[acronyme au pluriel]{version longue}
 \acro{DT}{diamètre de la tumeur}
 \acro{DTM}{diamètre de la tumeur moyen}
 \acro{GBG}{gliome de bas grade}
-\acroplural{GBG}[GBGs]{gliomes de bas grade}%
+\acroplural{GBG}[GBGs]{gliomes de bas grade}
 \acro{MI}{moment d'injection}
 \acroplural{MI}[MIs]{moments d'injection}
 \end{acronym}
 \subsection{Liste des paramètres}
+\begin{tabular}{r l}
+    $t_{stop}$ & Temps de fin de simulation (en mois)\\
+    $n_{inj}$ & nombre d'injections administrées\\
+    $\lambda_{p}$ & coefficient de croissance du tissus\\
+    $P$ & Tissu prolifératif\\
 
-
+    
+\end{tabular}
+\section{Notes sur notre première tentative de projet}
+Notre premier projet portait sur l'impact des stress solides générés par les processus néoplasiques sur la croissance des tumeurs, et sur leur potentiel pour autolimiter la croissance des tumeurs. Cependant, une question scientifique trop peu précise, notre manque de connaissances sur la physique des matériaux, la bibliographie extensive, et une formule clé qui c'est retrouvée inexacte ont eu raison de notre première semaine. Ne voyant pas comment avancer a motivé un changement radical de sujet. Ce sujet est intéressant, mais mettons en garde les groupes voulant tenter un sujet similaire qu'il faut commencer avec déjà les idées claires.
 \section{Introduction}
 Que sont les \acp{GBG}, leurs propriétés ?\\
 Quels sont les traitements existants?\\
@@ -126,7 +136,7 @@ Dans l'article de référence, des données de patients ayant été traité par 
 
 \subsection{Exploration de l'espace des paramètres}
 On constate que des variations des paramètres tumoraux modifient significativement l'évolution du DT \ref{fig:rand_traj}.  On regarde l'influence de $\lambda_{p}$ et  la proportion de $\frac{P_{0}}{Q_{0}}$
-sur le DT \ref{fig:heatmap}. On fait varier $P_{0}$ entre 3 et 15\% du DT qu'on fixe à 50mm, et $\lambda_{p}$ varie entre 0 et 0.4 qui représente les variations interindividuelles tous traitements confondus. On constate que $\lambda_{p}$ est déterminant pour le DT moyen sur 40 mois pour les trois traitements tandis que $\frac{P_{0}}{Q_{0}}$ n'a qu'une influence réduite. Mais ces deux paramètres ont des effets sur la proportion des différentes populations (figures non présentées). Toutefois, l'objectif des traitements est la diminution de la taille de la tumeur, et donc des trois types de tissu. Il semble qu'estimer $\lambda_{p}$ pour chaque patient est essentiel pour prédire le DT et paramétriser le modèle. Les paramètres du traitement,  $\gamma$ et C, sont également déterminant pour diminuer la taille de la tumeur. Augmenter la dose injectée $C_{0}$ permet réduire le DT moyen sur 40 mois. Toutefois, on constate qu'à partir d'une certaine concentration, le DT ne réduit plus \ref{fig:effet_C}. Toutefois, ici on ne considère pas la toxicité du traitement.  Or, ces traitements engendrent des dommages à l'ADN ce à haute dose est nocif pour les patients. Il faut ainsi évaluer la balance bénéfice risque. De même, augmenter $\gamma$, qui caractérise l'éfficacité des traitements pour créer des dommages ADN, diminue le DT moyen. Mais là encore on ne caratérise pas la nocivité pour les patients. Par ailleurs, on considère ici que $\gamma$ est constant. Or, on suppose qu' au cours du temps, les cellules traitées vont développer de la résistance. Le phénomène de résistance des cellules quiescentes est essentiel dans la ressurgence des cancers. Mais, si on considère des temps courts ( environ 40 mois), cette hypothèse est cohérente. 
+sur le DT \ref{fig:heatmap}. On fait varier $P_{0}$ entre 3 et 15\% du DT qu'on fixe à 50mm, et $\lambda_{p}$ varie entre 0 et 0.4 qui représente les variations interindividuelles tous traitements confondus. On constate que $\lambda_{p}$ est déterminant pour le DT moyen sur 40 mois pour les trois traitements tandis que $\frac{P_{0}}{Q_{0}}$ n'a qu'une influence réduite. Mais ces deux paramètres ont des effets sur la proportion des différentes populations (figures non présentées). Toutefois, l'objectif des traitements est la diminution de la taille de la tumeur, et donc des trois types de tissu. Il semble qu'estimer $\lambda_{p}$ pour chaque patient est essentiel pour prédire le DT et paramétriser le modèle. Les paramètres du traitement,  $\gamma$ et $C$, sont également déterminant pour diminuer la taille de la tumeur. Augmenter la dose injectée $C_{0}$ permet réduire le DT moyen sur 40 mois. Toutefois, on constate qu'à partir d'une certaine concentration, le DT ne réduit plus \ref{fig:effet_C}. Toutefois, ici on ne considère pas la toxicité du traitement.  Or, ces traitements engendrent des dommages à l'ADN ce à haute dose est nocif pour les patients. Il faut ainsi évaluer la balance bénéfice risque. De même, augmenter $\gamma$, qui caractérise l'efficacité des traitements pour créer des dommages ADN, diminue le DT moyen. Mais là encore on ne caratérise pas la nocivité pour les patients. Par ailleurs, on considère ici que $\gamma$ est constant. Or, on suppose qu'au cours du temps, les cellules traitées vont développer de la résistance. Le phénomène de résistance des cellules quiescentes est essentiel dans la ressurgence des cancers. Mais, si on considère des temps courts (environ 40 mois), cette hypothèse est cohérente. 
 \begin{figure}
     
     \begin{subfigure}[t]{\textwidth}
@@ -151,14 +161,16 @@ sur le DT \ref{fig:heatmap}. On fait varier $P_{0}$ entre 3 et 15\% du DT qu'on 
     \caption{\textbf{(a).} Effet de $\lambda_{p}$ et $\frac{P_{0}}{Q_{0}}$ sur le DT moyen, jaune indique un DT grand et bleu faible. \textbf{(b).} Effet de $\gamma$ sur le DT, les autres paramètres sont choisis selon les valeurs moyennes des traitements. \textbf{(c).} Effet de $C$ sur le DT, les autres paramètres sont choisis selon les valeurs moyennes des traitements.}
 
 \end{figure}
-Il semble donc essentielle d'estimer les paramètres individuelles des tumeurs et des traitements pour informer le modèle et prédire avec précision l'évolution du DT. 
-Pour l'instant, on a considéré que les traitements sont injectés en une seule fois à t=0.  Mais est-ce qu'injecter la même dose de traitement en plusieurs fois ou à des proportions différentes de $P_{0}$, $Q_{0}$ pourrait diminuer le DT sans accroître excessivement la toxicité ? 
+Il semble donc essentiel d'estimer les paramètres individuels des tumeurs et des traitements pour informer le modèle et prédire avec précision l'évolution du \ac{DT}. 
+Pour l'instant, nous avions considéré que les traitements sont injectés en une seule fois à t=0.  Mais est-ce qu'injecter la même dose de traitement en plusieurs fois ou à des proportions différentes de $P_{0}$, $Q_{0}$ pourrait diminuer le DT sans accroître excessivement la toxicité ?
+
 \section{Optimisation du moment et de la fréquence d'injection}
-On cherche à établir le meilleur moment pour injecter une dose de traitement. Pour ce faire, on choisit un score S à minimiser. Ce score est l'intégrale du diamètre de la tumeur sur la durée de la simulation. L'objectif du traitement est de réduire la taille de la tumeur sur un temps long et non seulement de considérer le DT à un t doné car alors, les injections seraient faites au temps peu avant t. Le score choisit ainsi de la durée de la simulation
+On cherche à établir le meilleur moment pour injecter une dose de traitement. Pour ce faire, on definit un score S à minimiser. Nous avons choisi de le défiir comme l'intégrale du \ac{DT} sur la durée de la simulation. L'objectif du traitement est de réduire la taille de la tumeur sur un temps long et non seulement de considérer le \ac{DT} à un $t$ donné car dans ce cas, les injections seraient faites au temps peu avant ce $t$.\\
+$$S=\int_{0}^{t_{stop}}\,DT(t)dt$$
 Comme expliqué précédement, les points de temps pour lesquels les différentes populations sont estimées ne sont pas répartis uniformément sur la durée de la simulation, et certains sont répétés. En effet, les valeurs de fin d'un interval (avant injection) et de debut de l'interval suivant (après injection) sont tous les deux dans les données, au même temps. Ainsi, afin de limiter l'opportunité de la fonction d'optimisation d'exploiter le systeme de sampling, par exemple en choisisant des temps d'injections permettant de surreprésenter la période de temps pendant laquelle la tumeur est petite pour diminuer artificiellement le score, nous utilisons une intégration par méthode des trapèzes au lieu de prendre la moyenne des tailles. Cela n'élimine cependant pas la sous-estimation sur les parties convexes du \ac{DT}.
 
 \subsection{Optimisation pour une unique injection}
-On cherche d'abord à déterminer si injecter le traitement à $ t > 0$  réduit S.  On observe le DT moyen pour des simulations de durée variable \ref{fig:duree_simu}. Si le temps de simulation est inférieure à 60 mois, pour les paramètres moyens des différents traitements, on voit qu'il est préférable de réaliser l'injection à t=0.  Pour les trois traiments à partir d'une certaine durée de simulation, le moment d'injection (MI) augmente linéairement en fonction de la durée de simulation. Mais on a considéré ici les paramètres moyens uniquement, or on a constaté précedemment que $\lambda_{p}$ avait un effet significatif sur l'évolution des tumeurs. On regarde donc si pour des simulations courtes (60 mois), des $\lambda_{p}$ différents il est également optimal de choisir $MI = 0$ \ref{fig:effet_lambda_moment}. On voit que pour PCV notamment, si la tumeur crôit plus vite que la moyenne, il est préférable de retarder l'injection. Mais il semble tout de même que $MI = 0$ est optimal.
+On cherche d'abord à déterminer si injecter le traitement à $t > 0$  réduit S.  On observe le DT moyen pour des simulations de durée variable \ref{fig:duree_simu}. Si le temps de simulation est inférieur à 60 mois, pour les paramètres moyens des différents traitements, on voit qu'il est préférable de réaliser l'injection à $t=0$.  Pour les trois traitements à partir d'une certaine durée de simulation, le \ac{MI} optimal augmente linéairement en fonction de la durée de simulation. Mais on a considéré ici les paramètres moyens uniquement, or on a constaté précedemment que $\lambda_{p}$ avait un effet significatif sur l'évolution des tumeurs. On regarde donc si pour des simulations courtes (60 mois), des $\lambda_{p}$ différents il est également optimal de choisir $MI = 0$ \ref{fig:effet_lambda_moment}. On voit que pour PCV notamment, si la tumeur crôit plus vite que la moyenne, il est préférable de retarder l'injection. Mais il semble tout de même que $MI = 0$ est optimal.
 \begin{figure}
 
     \centering
@@ -176,26 +188,69 @@ On cherche d'abord à déterminer si injecter le traitement à $ t > 0$  réduit
         \caption{} \label{fig:effet_lambda_moment}
     \end{subfigure}
 
-    \caption{\textbf{(a).} DT moyen pour des simulations de durée entre 20 et 120 mois pour les paramètres moyens des différents traitements. \textbf{(b).} Effet de $\lambda_{p}$ sur le DT pour une durée de simulation de 60 mois.}
-\end{figure}
-\subsubsection{Moment d'injection optimal en fonction de la quantité injectée}
-%Paul
+    \vspace{0.5cm}
 
-\subsection[Injections répétées]{Minisation de la taille moyenne de la tumeur par injections répétées}
-%Paul
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Image/effet_ctot_moment.png}
+        \caption{} \label{fig:effet_ctot_moment}
+    \end{subfigure}
+
+    \caption{\textbf{(a).} \ac{DT} moyen pour des simulations de durée entre 20 et 120 mois pour les paramètres moyens des différents traitements. \textbf{(b).} Effet de $\lambda_{p}$ sur le \ac{DT} pour une durée de simulation de 60 mois. \textbf{(c).} Effet de $C_{tot}$ sur le \ac{MI} optimal.}
+\end{figure}
+
+\subsection[Injections répétées]{Optimisation pour plusieurs injections}
+\subsubsection[Controles]{Controles au protocoles proposées}
+Afin de vérifier le bénéfice de réaliser plusieurs injections, nous allons comparer avec deux autres protocoles. Afin d'évaluer l'impact de la séparation des injections, nous allons d'abord comparer avec une seule injection au temps optimal avec une dose équivalente. Ensuite, pour évaluer les gains par rapport à la méthode existance, nous allons reproduire le protocole de soin utilisé dans l'étude qui a permis l'estimation des paramètres, appelé "protocole clinique", c'est à dire des injections tous les 1.5 mois. En pratique, celui-ci contient 6 injections, mais nous allons comparer à nombre d'injections égales. Avant d'utiliser une injection unique avec une dose totale équivalente aux multiples injections, nous avions observé que le temps optimal proposé ne varie pas considérablement das le cas des paramètres des protocoles PCV et TMZ, mais celui-ci diminue rapidement vers 0 pour le protocole de radiothérapie\ref{fig:effet_ctot_moment}.
+
+
 \subsubsection{Principes généraux}
 L'objectif est de savoir si en réalisant $n_{inj}$ injections, le \ac{DTM} peut être réduit. 
-Pour trouver les minima globaux, notre première méthode était de trouver une estimation grossière en explorant de l'ensemble des valeurs des \acp{MI} possibles par une grille à $n_{inj}$ dimensions, avec $N=20$ points par dimensions, par \texttt{scipy.optimise.brute}. Cette estimation était ensuite  minimisée localement par \texttt{scipy.optimize.minimise} avec la methode L-BGCF-B\cite{}.\\
-Le premier problème était que la complexité de la première étape de cette méthode $O({N}^{n_{inj}})$ rendait cette méthode peu pratique pour des calculs à haute dimention ($n_{inj}\geq4$). Cependant, nous avions remarqué que la distribution des \acp{MI} optimaux proposée ressemblait à un espacement régulier des injections. Ainsi, nous avons choisi de déteminer le protocole optimal en deux étapes. Premièrement, nous cherchions un protocole avec un interval de temps régulier $\delta_{t}$ entre les injections, à partir temps de première injection $T_{i}$. Ces deux paramètres étaient trouvées par exploration grossière en grille, suivi d'une minimisation locale. Les \acp{MI} ainsi optenus servent de point de départ pour la recherche du protocol optimal sans contrainte d'un interval régulier.\\
+Pour trouver les minimas globaux, notre première méthode était de trouver une estimation grossière en explorant de l'ensemble des valeurs des $n_{inj}$ \acp{MI} possibles par une grille à $n_{inj}$ dimensions, avec $Ns=30$ points par dimensions, par \texttt{scipy.optimise.brute}. Cette estimation était ensuite minimisée localement par \texttt{scipy.optimize.minimise} avec la methode L-BGCF-B\cite{}.\\
+
+\subsubsection{Ajout d'injection à espacement constant}
+Le premier obstacle était que la complexité de la première étape de cette méthode $O({N}^{n_{inj}})$ rendait cette méthode peu pratique pour des calculs à haute dimention ($n_{inj}\geq4$). Cependant, nous avions remarqué que la distribution des \acp{MI} optimaux proposée ressemblait à un espacement régulier des injections. Ainsi, nous avons choisi de déteminer le protocole optimal en deux étapes. Premièrement, nous cherchions un protocole avec un interval de temps régulier $\delta_{t}$ entre les injections, à partir temps de première injection $T_{i}$. Ces deux paramètres étaient trouvées de la même manière que décrit précédement. Les \acp{MI} ainsi obtenus servent de point de départ pour la recherche du protocol optimal sans contrainte d'un interval régulier par \texttt{scipy.optimize.minimise} avec la methode L-BGCF-B\cite{}.\\
 En comparant ces deux résultats, nous pouvons aussi évaluer le coût d'imposer des injections espacées d'un temps régulier.
 
-\subsubsection[Injections multiples 120 mois]{Evolution de \acf{DTM} sur 120 mois en fonction du nombre d'injections}
-\subsubsection{}
+\subsubsection[TODO Injections multiples 120 mois]{Evolution de \acf{DTM} sur 120 mois en fonction du nombre d'injections}
+Notons d'abord le comportement observé dans les conditions RAD, qui convergent rapidement vers une administration concentrée vers le temps initial. Pour les deux autres, on remarque que les protocoles contraint à un espacement régulier n'entrainent pas de scores sensiblements diminués par rapport au protocoles optimaux. On note cependant que la performance est bien meilleure qu'une injection multiple. On note enfin 
+Pour les trois jeu de paramètres, on observe de nouveau l'effet de plateau mentionné dans la partie 3.2 pour lequel après une certaine dose le gain d'efficacité deviens négligeable. \ref{fig:DTM_120m_nontox}\\
+Sur les \acp{MI} optimaux trouvées, on remarque qu'ils restent effectivement bien proche des \acp{MI} contraints par la régularité d'injection, jusqu'à ce que pour $n_{inj} \geqslant 7$ la deuxième injection se superpose à la première \ref{fig:mi_120m_nontox}. Il est possible que le faible écart soit du à la faible variation relative du score, donnant lieu à une convergence de l'algorithme d'optimisation avant que le vrai optimum global ne soit trouvé.
+
+\begin{figure}
+
+    \centering
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Image/effet_inj_mult_120_nontox.png} 
+        \caption{} \label{fig:DTM_120m_nontox}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Image/mi_inj_mult_120_nontox.png}
+        \caption{} \label{fig:mi_120m_nontox}
+    \end{subfigure}
+
+    \caption{\textbf{(a).} \acp{DTM} sur 120 mois en fonction du nombre d'injections pour plusieurs protocoles pour les paramètres moyens des différents traitements. \textbf{(b).} \acp{MI} optimaux correspondant en fonction du nombre d'injections, avec (en rouge) ou sans (en bleu) la contrainte d'une séparation temporelle régulière.}
+\end{figure}
+\subsubsection[Injections multiples 60 mois]{Evolution de \acf{DTM} sur 60 mois en fonction du nombre d'injections}
+On observe que même avec la possibilité de réaliser plusieurs injections, la stratégie optimale est dans tous les cas de tout réaliser le plus tôt possible, et tous les protocoles reviennent à une gros injection. Le temps de simulation est trop court pour que des comportements complexes puissent émerger. On note que le protocole clinique est par conséquent celui qui à la moins bonne performance. Cependant celui-ci réponds à des problèmes de tolérance des patients aux traitements.
+\subsection[TODO Toxicité]{Prise en compte de la toxicité}
+En pratique, la toxicité des agents chimiotherapeutiques est le facteur limitant les doses injectées à un instant donnée, forçant d'espaces les injections dans le temps. Hors, notre modèle ne le prends pas en compte, c'est pourquoi il propose dans certaines circonstances des injections superposées à $t=0$. Nous voulions ajouter une notion de toxicité à la fonction de score, pour pousser l'algorithme d'optimisation à proposer un protocole plus réaliste.\\ 
+Nous avons immédiatement pensé à définir le score à minimiser en multipliant le \ac{DTM} par l'intégrale de la concentration par rapport au temps, pour pénaliser la toxicité liée à une trop grande concentration instantanée.\\
+$$S=\int_{0}^{t_{stop}}\,DT(t)dt \times \int_{0}^{t_{stop}}\,C(t)dt$$
+Cependant comme la dynamique de la concentration consiste de sommes d'exponetielles décroissantes, il est trivial de démontrer analytiquement que l'intégrale à $+\infty$ ne dépendrait pas des temps d'injections, et toute variation dans la simulation de l'effet de toxicité serait liée à la troncature des fin d'exponetielles par la fin de simulation, et pourrait être considéré comme un abus. D'autres propositions étaient de multiplier la \ac{DTM} par la concentration maximale atteinte, ou de rejeter toutes les simulation pour lesquelles la concentration dépasserait un seuil. Pour des contraintes de temps, uniquement la première a été implémentée :\\
+$$S=\int_{0}^{t_{stop}}\,DT(t)dt \times \max_{t \in [0, t_{stop}]} C(t) $$\\
+On voit 
 
 \section{Conclusion}
-Ce modèle peut s'avérer utile pour prédire l'évolution de la taille de la tumeur si les propriétés de la tumeur on pu être établies avant le traitement \cite{}. Il apparaît donc comme un potentiel outil de thérapie personalisée pour optimiser chez chaque patient le moment et les fréquences d'injection.  De plus, d'utres cancer tel que le cancer du sein ou du poumon, présentent des tissus P, Q et $Q_{p}$. Il serait intéressant de fitter ce modèle sur des données de patients pour tester sa validité. Mais le modèle tel qu'ici présenté a également de multiples limitations. 
+Ce modèle peut s'avérer utile pour prédire l'évolution de la taille de la tumeur si les propriétés de la tumeur on pu être établies avant le traitement \cite{}. Il apparaît donc comme un potentiel outil de thérapie personalisée pour optimiser chez chaque patient le moment et les fréquences d'injection.  De plus, d'autres cancer tel que le cancer du sein ou du poumon, présentent des tissus P, Q et $Q_{p}$. Il serait intéressant de fitter ce modèle sur des données de patients pour tester sa validité. Mais le modèle tel qu'ici présenté a également de multiples limitations. 
 \subsection{Limites et Perspectives}
 Tout d'abord, les données de patients à disposition n'ont permis uniquement d'observer les réponses au traitement des patients sur 40 à 60 mois.  Le modèle paraît valide pour des temps courts mais sa validité reste à tester sur des temps plus longs. En effet, sur des temps court on peut supposer que le développement de résistance aux traitements par les cellules tumorales est négligeable. Mais sur des temps longs, ce phénomène est essentielles dans la ressurgence de cancer plus aggressif. Il serait souhaitable de modifier le modèle pour inclure ce phénomène. \\
 Par ailleurs, ici on a considéré des patients suivant un unique traitement, or souvent les chimiothérapies sont prescrites après une chirurgie et radiothérapie. Il serait intéressant de modéliser les réponses aux traitements combiner afin de proposer une stratégie thérapeutique personnalisé.\\
-Des nouveaux traitements depuis la parution de l'article qui n'utilise pas les même mécanismes ... 
+Notre choix de fonction de score présente plusieurs limites. Elle est sensée représenter la qualité de vie du patient, et la relation que nous avons choisi suppose une relation linéaire entre le \ac{DT} et la qualité de vie du patient. Nous n'avions pas trouvé de données bibliographiques sur ce sujet, donc nous avons gardé cette relation car c'est la plus parcimonieuse. Nous ne sommes pas satisfaits de notre prise en compte de la toxicité, qui est critique pour expliquer la limite des doses administrées. On aurait pu également supposer une relation cubique entre la \ac{DTM} et le score, créant un lien non plus avec le diamètre mais le volume, en supposant des tumeurs sphériques. Nous aurions pu chercher à modéliser des effets de seuils, ou des mécanismes d'accomodations, considérer les proportion de types cellulaires, ou se concentrer l'état final.\\
+Enfin, depuis la parution de l'article de nouveaux types de traitement ont été développés, qui n'utilise pas les même mécanismes. Nous pourrions essayer de reproduire notre démarche avec eux et explorer si nous constatons les mêmes résultats. 
 \end{document}
